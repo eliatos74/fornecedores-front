@@ -1,0 +1,31 @@
+/* App.css */
+.content{
+    min-height: 100vh;
+}
+.app-header {
+    padding: 0;
+    background: var(--color-bg-container);
+    justify-content: center;
+  }
+  
+  .app-content {
+    margin: 24px 16px 0;
+  }
+  
+  .content-div {
+    padding: 24px;
+    min-height: 360px;
+    background: var(--color-bg-container);
+    border-radius: var(--border-radius-lg);
+  }
+  
+  .app-footer {
+    text-align: center;
+  }
+  
+  /* Exemplo de como definir as variáveis CSS */
+  :root {
+    --color-bg-container: #ffffff; /* Substitua pela cor de fundo desejada */
+    --border-radius-lg: 4px; /* Substitua pelo valor desejado */
+  }
+  
