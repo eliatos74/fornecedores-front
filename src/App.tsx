@@ -1,7 +1,7 @@
 import React from "react";
 import { UserAddOutlined, CodeSandboxOutlined } from "@ant-design/icons";
 import { Layout, Menu } from "antd";
-import "./App.css"; // Importando o arquivo CSS
+import "./App.css";
 import Formulario from "./components/formulario/Formulario";
 import Tabela from "./components/tabela/Tabela";
 
@@ -10,7 +10,7 @@ const { Content, Footer, Sider } = Layout;
 const items = [UserAddOutlined, CodeSandboxOutlined].map((icon, index) => ({
   key: String(index + 1),
   icon: React.createElement(icon),
-  label: index === 0 ? "Usuarios" : "Franqueados",
+  label: index === 0 ? "Usuarios" : "Fornecedores",
 }));
 
 function App() {
@@ -40,8 +40,8 @@ function App() {
         </header>
         <Content className="app-content">
           <div className="content-div">
-            <Formulario/>
-            <Tabela/>
+            <Formulario />
+            <Tabela />
           </div>
         </Content>
         <Footer className="app-footer">
