@@ -3,6 +3,9 @@ import axios from "axios";
 import { Space, Table } from "antd";
 import { EditOutlined, EyeOutlined, DeleteOutlined } from "@ant-design/icons";
 import type { TableProps } from "antd";
+import BotaoAdd from "./BotaoAdd";
+import "./Tabela.css";
+import Modal from "../modal/Modal";
 
 interface DataType {
   key: number;
@@ -64,6 +67,7 @@ const columns: TableProps<DataType>["columns"] = [
 
 function Tabela() {
   const [data, setData] = useState<DataType[]>([]);
+  const [modalVisible, setModalVisible] = useState(false);
 
   useEffect(() => {
     axios
@@ -85,20 +89,24 @@ function Tabela() {
       });
   }, []);
 
-  // const [data, setData] = useState([]);
+  const showModal = () => {
+    setModalVisible(true);
+  };
 
-  // useEffect(() => {
-  //   axios
-  //     .get("http://localhost:8080/api/v1/fornecedores")
-  //     .then((response) => {
-  //       console.log(response.status); // Exibe os dados no console
-  //     })
-  //     .catch((error) => {
-  //       console.error("There was an error fetching the data!", error);
-  //     });
-  // }, []);
+  const handleModalCancel = () => {
+    setModalVisible(false);
+  };
 
-  return <Table columns={columns} dataSource={data} />;
+  return (
+    <>
+      <div className="header-fornecedores">
+        <h2>Fornecedores</h2>
+        <BotaoAdd showModal={showModal} />
+      </div>
+      <Modal showModal={modalVisible} onCancel={handleModalCancel} />
+      <Table columns={columns} dataSource={data} className="table" />
+    </>
+  );
 }
 
 export default Tabela;

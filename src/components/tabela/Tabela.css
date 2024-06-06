@@ -1,0 +1,16 @@
+.header-fornecedores {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    margin-left: 10px;
+    margin-right: 250px;
+  }
+  
+  .header h2 {
+    margin: 0;
+  }
+  
+  .table {
+    margin-top: 20px; 
+  }

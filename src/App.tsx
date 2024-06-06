@@ -2,7 +2,6 @@ import React from "react";
 import { UserAddOutlined, CodeSandboxOutlined } from "@ant-design/icons";
 import { Layout, Menu } from "antd";
 import "./App.css";
-import Formulario from "./components/formulario/Formulario";
 import Tabela from "./components/tabela/Tabela";
 
 const { Content, Footer, Sider } = Layout;
@@ -30,17 +29,14 @@ function App() {
         <Menu
           theme="dark"
           mode="inline"
-          defaultSelectedKeys={["4"]}
+          defaultSelectedKeys={["2"]}
           items={items}
         />
       </Sider>
       <Layout>
-        <header className="app-header">
-          <h1>Elias</h1>
-        </header>
+        <header className="app-header"></header>
         <Content className="app-content">
           <div className="content-div">
-            <Formulario />
             <Tabela />
           </div>
         </Content>
