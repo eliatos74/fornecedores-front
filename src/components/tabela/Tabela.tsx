@@ -55,21 +55,15 @@ const columns: TableProps<DataType>["columns"] = [
   },
 ];
 
-// const data: DataType[] = [
-//   {
-//     key: "1",
-//     name: "Elias",
-//     lastName: "Almeida",
-//     email: "elias@teste",
-//     address: "Morada Nova",
-//   },
-// ];
-
 function Tabela() {
   const [data, setData] = useState<DataType[]>([]);
   const [modalVisible, setModalVisible] = useState(false);
 
   useEffect(() => {
+    fetchData();
+  }, []);
+
+  const fetchData = () => {
     axios
       .get("http://localhost:8080/api/v1/fornecedores")
       .then((response) => {
@@ -87,7 +81,7 @@ function Tabela() {
       .catch((error) => {
         console.error("Ocorreu um erro ao buscar os dados:", error);
       });
-  }, []);
+  };
 
   const showModal = () => {
     setModalVisible(true);
@@ -103,7 +97,7 @@ function Tabela() {
         <h2>Fornecedores</h2>
         <BotaoAdd showModal={showModal} />
       </div>
-      <Modal showModal={modalVisible} onCancel={handleModalCancel} />
+      <Modal showModal={modalVisible} onCancel={handleModalCancel} fetchData={fetchData} />
       <Table columns={columns} dataSource={data} className="table" />
     </>
   );

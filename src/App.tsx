@@ -40,9 +40,7 @@ function App() {
             <Tabela />
           </div>
         </Content>
-        <Footer className="app-footer">
-          Ant Design ©{new Date().getFullYear()} Created by Ant UED
-        </Footer>
+        <Footer className="app-footer"></Footer>
       </Layout>
     </Layout>
   );

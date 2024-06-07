@@ -1,0 +1,19 @@
+.alerta.success .ant-alert {
+    background-color: #d4edda;
+    color: #155724; 
+  }
+  
+  .alerta.error .ant-alert {
+    background-color: #f8d7da; 
+    border-color: #f5c6cb;
+    color: #721c24; 
+  }
+
+  .alerta {
+    position: fixed;
+    top: 16px;
+    right: 16px; 
+    z-index: 1000; 
+    width: auto; 
+    max-width: 300px; 
+  }
