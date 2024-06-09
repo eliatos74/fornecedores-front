@@ -7,16 +7,25 @@ interface ModalProps {
   showModal: boolean;
   onCancel: () => void;
   fetchData: () => void;
+  selectedFornecedor?: Data | null;
+  actionType: "create" | "edit" | "delete" | "view";
 }
 
 interface Data {
+  id?: number;
   name: string;
   lastName: string;
   email: string;
   address: string;
 }
 
-function Modal({ showModal, onCancel, fetchData}: ModalProps) {
+function Modal({
+  showModal,
+  onCancel,
+  fetchData,
+  selectedFornecedor,
+  actionType,
+}: ModalProps) {
   const [form] = Form.useForm();
   const [typeNotification, setTypeNotification] = useState<"success" | "error">(
     "success"
@@ -27,17 +36,29 @@ function Modal({ showModal, onCancel, fetchData}: ModalProps) {
     if (!showModal) {
       setTypeNotification("success");
       setNotification("");
+    } else if (
+      (actionType === "edit" || actionType === "view") &&
+      selectedFornecedor
+    ) {
+      form.setFieldsValue(selectedFornecedor);
+    } else {
+      form.resetFields();
     }
-  }, [showModal]);
+  }, [showModal, actionType, selectedFornecedor]);
 
   const handleFormSubmit = async (values: Data) => {
     try {
-
-      await axios.post("http://localhost:8080/api/v1/fornecedores", values);
-
+      if (actionType === "create") {
+        await axios.post("http://localhost:8080/api/v1/fornecedores", values);
+        setNotification("Fornecedor salvo com sucesso!");
+      } else if (actionType === "edit" && selectedFornecedor) {
+        await axios.put(
+          `http://localhost:8080/api/v1/fornecedores/${selectedFornecedor.id}`,
+          values
+        );
+        setNotification("Fornecedor atualizado com sucesso!");
+      }
       setTypeNotification("success");
-      setNotification("Fornecedor salvo com sucesso!");
-
       form.resetFields();
       fetchData();
       onCancel();
@@ -45,66 +66,131 @@ function Modal({ showModal, onCancel, fetchData}: ModalProps) {
       if (axios.isAxiosError(error)) {
         const axiosError = error as AxiosError;
         if (axiosError.response && axiosError.response.data) {
-          console.log(axiosError.response.data.errors.email)
-          setTypeNotification("error");
+          console.log(axiosError.response.data.errors.email);
           setNotification(axiosError.response.data.errors.email);
         } else {
-          setTypeNotification("error");
           setNotification("Erro desconhecido");
         }
+      } else {
+        setNotification("Erro desconhecido");
       }
+      setTypeNotification("error");
+    }
+  };
+
+  const handleDelete = async () => {
+    try {
+      if (selectedFornecedor) {
+        await axios.delete(
+          `http://localhost:8080/api/v1/fornecedores/${selectedFornecedor.id}`
+        );
+        setTypeNotification("success");
+        setNotification("Fornecedor excluído com sucesso!");
+        fetchData();
+        onCancel();
+      }
+    } catch (error) {
+      setTypeNotification("error");
+      setNotification("Erro ao excluir fornecedor");
     }
   };
 
   return (
     <>
       <AntModal
-        title="Adicionar Fornecedor"
+        title={
+          actionType === "create"
+            ? "Adicionar Fornecedor"
+            : actionType === "edit"
+            ? "Editar Fornecedor"
+            : actionType === "view"
+            ? "Visualizar Fornecedor"
+            : "Excluir Fornecedor"
+        }
         open={showModal}
         onCancel={onCancel}
-        footer={[
-          <Button key="cancel" onClick={onCancel}>
-            Cancelar
-          </Button>,
-          <Button key="submit" type="primary" onClick={() => form.submit()}>
-            Salvar
-          </Button>,
-        ]}
+        footer={
+          actionType === "delete"
+            ? [
+                <Button key="cancel" onClick={onCancel}>
+                  Cancelar
+                </Button>,
+                <Button
+                  key="delete"
+                  type="primary"
+                  danger
+                  onClick={handleDelete}
+                >
+                  Excluir
+                </Button>,
+              ]
+            : actionType !== "view"
+            ? [
+                <Button key="cancel" onClick={onCancel}>
+                  Cancelar
+                </Button>,
+                <Button
+                  key="submit"
+                  type="primary"
+                  onClick={() => form.submit()}
+                >
+                  Salvar
+                </Button>,
+              ]
+            : [
+                <Button key="close" onClick={onCancel}>
+                  Fechar
+                </Button>,
+              ]
+        }
       >
-        <Form
-          form={form}
-          layout="vertical"
-          onFinish={(values) => {
-            handleFormSubmit(values);
-          }}
-        >
-          <Form.Item
-            label="Nome"
-            name="name"
-            rules={[{ required: true, message: "Por favor, insira o nome" }]}
-          >
-            <Input />
-          </Form.Item>
-          <Form.Item
-            label="Sobrenome"
-            name="lastName"
-            rules={[
-              { required: true, message: "Por favor, insira o sobrenome" },
-            ]}
-          >
-            <Input />
-          </Form.Item>
-          <Form.Item
-            label="E-mail"
-            name="email"
-            rules={[{ required: true, message: "Por favor, insira o e-mail" }]}
-          >
-            <Input />
-          </Form.Item>
-          <Form.Item label="Endereço" name="address">
-            <Input />
-          </Form.Item>
-        </Form>
+        {actionType === "delete" ? (
+          <p>Deseja realmente excluir o fornecedor?</p>
+        ) : (
+          <Form form={form} layout="vertical" onFinish={handleFormSubmit}>
+            <Form.Item
+              label="Nome"
+              name="name"
+              rules={
+                actionType !== "view"
+                  ? [{ required: true, message: "Por favor, insira o nome" }]
+                  : undefined
+              }
+            >
+              <Input disabled={actionType === "view"} />
+            </Form.Item>
+            <Form.Item
+              label="Sobrenome"
+              name="lastName"
+              rules={
+                actionType !== "view"
+                  ? [
+                      {
+                        required: true,
+                        message: "Por favor, insira o sobrenome",
+                      },
+                    ]
+                  : undefined
+              }
+            >
+              <Input disabled={actionType === "view"} />
+            </Form.Item>
+            <Form.Item
+              label="E-mail"
+              name="email"
+              rules={
+                actionType !== "view"
+                  ? [{ required: true, message: "Por favor, insira o e-mail" }]
+                  : undefined
+              }
+            >
+              <Input disabled={actionType === "view"} />
+            </Form.Item>
+            <Form.Item label="Endereço" name="address">
+              <Input disabled={actionType === "view"} />
+            </Form.Item>
+          </Form>
+        )}
       </AntModal>
       <Notificacao type={typeNotification} message={notification} />
     </>
