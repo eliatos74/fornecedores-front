@@ -49,11 +49,11 @@ function Modal({
   const handleFormSubmit = async (values: Data) => {
     try {
       if (actionType === "create") {
-        await axios.post("http://localhost:8080/api/v1/fornecedores", values);
+        await axios.post("https://8080-eliatos74-fornecedoresb-r87fn6qhecg.ws-us114.gitpod.io/api/v1/fornecedores", values);
         setNotification("Fornecedor salvo com sucesso!");
       } else if (actionType === "edit" && selectedFornecedor) {
         await axios.put(
-          `http://localhost:8080/api/v1/fornecedores/${selectedFornecedor.id}`,
+          `https://8080-eliatos74-fornecedoresb-r87fn6qhecg.ws-us114.gitpod.io/api/v1/fornecedores/${selectedFornecedor.id}`,
           values
         );
         setNotification("Fornecedor atualizado com sucesso!");
@@ -82,7 +82,7 @@ function Modal({
     try {
       if (selectedFornecedor) {
         await axios.delete(
-          `http://localhost:8080/api/v1/fornecedores/${selectedFornecedor.id}`
+          `https://8080-eliatos74-fornecedoresb-r87fn6qhecg.ws-us114.gitpod.io/api/v1/fornecedores/${selectedFornecedor.id}`
         );
         setTypeNotification("success");
         setNotification("Fornecedor excluído com sucesso!");

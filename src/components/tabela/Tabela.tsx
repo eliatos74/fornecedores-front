@@ -31,7 +31,7 @@ function Tabela() {
 
   const fetchData = () => {
     axios
-      .get("http://localhost:8080/api/v1/fornecedores")
+      .get("https://8080-eliatos74-fornecedoresb-r87fn6qhecg.ws-us114.gitpod.io/api/v1/fornecedores")
       .then((response) => {
         const transformedData = response.data.map(
           (item: DataType, index: number) => ({
